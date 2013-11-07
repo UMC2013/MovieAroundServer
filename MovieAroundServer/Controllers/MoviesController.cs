@@ -10,107 +10,135 @@ using MovieAroundServer.Models;
 
 namespace MovieAroundServer.Controllers
 {
-    public class GenresController : Controller
+    public class MoviesController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
 
-        // GET: /Genres/
+        // GET: /Movies/
         public ActionResult Index()
         {
-            return View(db.Genres.ToList());
+            return View(db.Movies.ToList());
         }
 
-        // GET: /Genres/Details/5
+        // GET: /Movies/Details/5
         public ActionResult Details(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Genre genre = db.Genres.Find(id);
-            if (genre == null)
+            Movie movie = db.Movies.Find(id);
+            if (movie == null)
             {
                 return HttpNotFound();
             }
-            return View(genre);
+            return View(movie);
         }
 
-        // GET: /Genres/Create
+        // GET: /Movies/Create
         public ActionResult Create()
         {
+            var genres = db.Genres.ToList();
+
+            ViewBag.Genres = new MultiSelectList(genres, "GenreId", "Name");
+
             return View();
         }
 
-        // POST: /Genres/Create
+        // POST: /Movies/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include="GenreId,Name")] Genre genre)
+        public ActionResult Create([Bind(Include="MovieId,Title,Synopsis")] Movie movie, int[] genres)
         {
             if (ModelState.IsValid)
             {
-                db.Genres.Add(genre);
+                foreach (var genreId in genres)
+                {
+                    var genre = db.Genres.Find(genreId);
+                    movie.Genres.Add(genre);
+                }
+                db.Movies.Add(movie);
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
 
-            return View(genre);
+            return View(movie);
         }
 
-        // GET: /Genres/Edit/5
+        // GET: /Movies/Edit/5
         public ActionResult Edit(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Genre genre = db.Genres.Find(id);
-            if (genre == null)
+            Movie movie = db.Movies.Find(id);
+            if (movie == null)
             {
                 return HttpNotFound();
             }
-            return View(genre);
+
+            EditMovieViewModel model = new EditMovieViewModel();
+            model.Movie = movie;
+            model.Genres = new SelectList(db.Genres.ToList(), "GenreId", "Name");
+            model.SelectedGenres = movie.Genres.Select(g => g.GenreId).ToList();
+
+            return View(model);
         }
 
-        // POST: /Genres/Edit/5
+        // POST: /Movies/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include="GenreId,Name")] Genre genre)
+        public ActionResult Edit([Bind(Include = "MovieId,Title,Synopsis")] Movie movie, int[] SelectedGenres)
         {
             if (ModelState.IsValid)
             {
-                db.Entry(genre).State = EntityState.Modified;
+                Movie updatedMovie = db.Movies.Find(movie.MovieId);
+                updatedMovie.Genres.Clear();
+                updatedMovie.Title = movie.Title;
+                updatedMovie.Synopsis = movie.Synopsis;
+
+                List<Genre> genres = new List<Genre>();
+                foreach (var genreId in SelectedGenres)
+                {
+                    genres.Add(db.Genres.Find(genreId));
+                }
+
+                updatedMovie.Genres = genres;
+
                 db.SaveChanges();
+
                 return RedirectToAction("Index");
             }
-            return View(genre);
+            return View(movie);
         }
 
-        // GET: /Genres/Delete/5
+        // GET: /Movies/Delete/5
         public ActionResult Delete(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Genre genre = db.Genres.Find(id);
-            if (genre == null)
+            Movie movie = db.Movies.Find(id);
+            if (movie == null)
             {
                 return HttpNotFound();
             }
-            return View(genre);
+            return View(movie);
         }
 
-        // POST: /Genres/Delete/5
+        // POST: /Movies/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Genre genre = db.Genres.Find(id);
-            db.Genres.Remove(genre);
+            Movie movie = db.Movies.Find(id);
+            db.Movies.Remove(movie);
             db.SaveChanges();
             return RedirectToAction("Index");
         }

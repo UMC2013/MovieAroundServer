@@ -21,15 +21,19 @@ namespace MovieAroundServer.Models
         public DbSet<Theater> Theaters { get; set; }
     }
 
-    public class Genre
+    public partial class Genre
     {
         public int GenreId { get; set; }
         public string Name { get; set; }
         public virtual ICollection<Movie> Movies { get; set; }
     }
 
-    public class Movie
+    public partial class Movie
     {
+        public Movie()
+        {
+            this.Genres = new List<Genre>();
+        }
         public int MovieId { get; set; }
         public string Title { get; set; }
         public string Synopsis { get; set; }
@@ -37,7 +41,7 @@ namespace MovieAroundServer.Models
         public virtual ICollection<Theater> Theaters { get; set; }
     }
 
-    public class Theater
+    public partial class Theater
     {
         public int TheaterId { get; set; }
         public string Name { get; set; }

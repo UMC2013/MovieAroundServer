@@ -10,107 +10,107 @@ using MovieAroundServer.Models;
 
 namespace MovieAroundServer.Controllers
 {
-    public class GenresController : Controller
+    public class TheatersController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
 
-        // GET: /Genres/
+        // GET: /Theaters/
         public ActionResult Index()
         {
-            return View(db.Genres.ToList());
+            return View(db.Theaters.ToList());
         }
 
-        // GET: /Genres/Details/5
+        // GET: /Theaters/Details/5
         public ActionResult Details(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Genre genre = db.Genres.Find(id);
-            if (genre == null)
+            Theater theater = db.Theaters.Find(id);
+            if (theater == null)
             {
                 return HttpNotFound();
             }
-            return View(genre);
+            return View(theater);
         }
 
-        // GET: /Genres/Create
+        // GET: /Theaters/Create
         public ActionResult Create()
         {
             return View();
         }
 
-        // POST: /Genres/Create
+        // POST: /Theaters/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include="GenreId,Name")] Genre genre)
+        public ActionResult Create([Bind(Include="TheaterId,Name,Latitude,Longitude,Address")] Theater theater)
         {
             if (ModelState.IsValid)
             {
-                db.Genres.Add(genre);
+                db.Theaters.Add(theater);
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
 
-            return View(genre);
+            return View(theater);
         }
 
-        // GET: /Genres/Edit/5
+        // GET: /Theaters/Edit/5
         public ActionResult Edit(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Genre genre = db.Genres.Find(id);
-            if (genre == null)
+            Theater theater = db.Theaters.Find(id);
+            if (theater == null)
             {
                 return HttpNotFound();
             }
-            return View(genre);
+            return View(theater);
         }
 
-        // POST: /Genres/Edit/5
+        // POST: /Theaters/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include="GenreId,Name")] Genre genre)
+        public ActionResult Edit([Bind(Include="TheaterId,Name,Latitude,Longitude,Address")] Theater theater)
         {
             if (ModelState.IsValid)
             {
-                db.Entry(genre).State = EntityState.Modified;
+                db.Entry(theater).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            return View(genre);
+            return View(theater);
         }
 
-        // GET: /Genres/Delete/5
+        // GET: /Theaters/Delete/5
         public ActionResult Delete(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Genre genre = db.Genres.Find(id);
-            if (genre == null)
+            Theater theater = db.Theaters.Find(id);
+            if (theater == null)
             {
                 return HttpNotFound();
             }
-            return View(genre);
+            return View(theater);
         }
 
-        // POST: /Genres/Delete/5
+        // POST: /Theaters/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Genre genre = db.Genres.Find(id);
-            db.Genres.Remove(genre);
+            Theater theater = db.Theaters.Find(id);
+            db.Theaters.Remove(theater);
             db.SaveChanges();
             return RedirectToAction("Index");
         }
