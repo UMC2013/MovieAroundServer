@@ -8,7 +8,7 @@
 
 <div>
     <h4>Theater</h4>
-	<hr />
+    <hr />
     <dl class="dl-horizontal">
         <dt>
             @Html.DisplayNameFor(model => model.Name)
@@ -44,7 +44,74 @@
 
     </dl>
 </div>
+
+<table class="table" style="max-width:500px;">
+    <tr>
+        <th>
+            Movie
+        </th>
+        <th>
+            Time
+        </th>
+        <th></th>
+    </tr>
+    @foreach (var item in Model.ShowTimes.OrderBy(s => s.Time))
+    {
+        <tr>
+            <td>
+                @item.Movie.Title
+            </td>
+            <td>
+                @item.Time
+            </td>
+            <td><a href="#" class="remove_showtime" data-showtimeid="@item.ShowTimeId">Remove</a></td>
+        </tr>
+    }
+    <tr>
+        <td>
+            @Html.DropDownList("new_showtime_movie", new SelectList(ViewBag.Movies, "MovieId", "Title", 0), new { style = "min-width:200px;" })
+        </td>
+        <td><input type="text" id="new_showtime_time" class="text-box single-line" /></td>
+        <td><button id="button_new_showtime" type="button" class="btn btn-primary" style="height:25px;line-height:10px;">Add</button></td>
+    </tr>
+</table>
+
 <p>
     @Html.ActionLink("Edit", "Edit", new { id = Model.TheaterId }) |
     @Html.ActionLink("Back to List", "Index")
 </p>
+@section Scripts {
+    
+<script type="text/javascript">
+    var theaterId = '@Model.TheaterId';
+    $('#new_showtime_time').timepicker({
+        minuteStep: 1,
+        template: 'modal',
+        appendWidgetTo: 'body',
+        showSeconds: true,
+        showMeridian: false,
+        defaultTime: false
+    });
+
+    $('#button_new_showtime').click(function () {
+        
+        var movieId = $('#new_showtime_movie').select().val();
+        var time = $('#new_showtime_time').val();
+
+        if (movieId.length > 0 && time.length > 0) {
+            $.post('/Theaters/AddShowTime', { theaterId: theaterId, movieId: movieId, time: time }, function (result) {
+                if (result)
+                    location.reload();
+            });
+        }
+    });
+
+    $('.remove_showtime').click(function () {
+        var showTimeId = $(this).data('showtimeid');
+        $.post('/Theaters/RemoveShowTime', { showTimeId: showTimeId }, function (result) {
+            if (result)
+                location.reload();
+        });
+    });
+</script>
+}

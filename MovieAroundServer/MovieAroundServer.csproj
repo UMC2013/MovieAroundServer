@@ -186,6 +186,10 @@
     <Compile Include="Migrations\201311061612492_Initial.Designer.cs">
       <DependentUpon>201311061612492_Initial.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201311132011534_AddShowTime.cs" />
+    <Compile Include="Migrations\201311132011534_AddShowTime.Designer.cs">
+      <DependentUpon>201311132011534_AddShowTime.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\IdentityModels.cs" />
@@ -194,14 +198,18 @@
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\bootstrap-responsive.css" />
+    <Content Include="Content\bootstrap-timepicker.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="Scripts\bootstrap-timepicker.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
+    <None Include="Properties\PublishProfiles\moviearound.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
@@ -267,6 +275,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201311061612492_Initial.resx">
       <DependentUpon>201311061612492_Initial.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201311132011534_AddShowTime.resx">
+      <DependentUpon>201311132011534_AddShowTime.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

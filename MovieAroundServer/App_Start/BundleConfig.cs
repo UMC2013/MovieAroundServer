@@ -21,10 +21,13 @@ namespace MovieAroundServer
 
             bundles.Add(new ScriptBundle("~/bundles/bootstrap").Include(
                       "~/Scripts/bootstrap.js",
+                      "~/Scripts/bootstrap-timepicker.js",
                       "~/Scripts/respond.js"));
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap.css",
+                      "~/Content/bootstrap-timepicker.css",
+                      "~/Content/bootstrap-responsive.css",
                       "~/Content/site.css"));
         }
     }

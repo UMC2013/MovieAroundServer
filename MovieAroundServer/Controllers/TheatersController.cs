@@ -32,6 +32,9 @@ namespace MovieAroundServer.Controllers
             {
                 return HttpNotFound();
             }
+            
+            ViewBag.Movies = db.Movies.OrderBy(m => m.Title).ToList();
+
             return View(theater);
         }
 
@@ -113,6 +116,40 @@ namespace MovieAroundServer.Controllers
             db.Theaters.Remove(theater);
             db.SaveChanges();
             return RedirectToAction("Index");
+        }
+
+        [HttpPost]
+        public JsonResult AddShowTime(int theaterId, int movieId, string time)
+        {
+            TimeSpan timeShowTime = new TimeSpan();
+            if (TimeSpan.TryParse(time, out timeShowTime))
+            {
+                ShowTime showTime = new ShowTime();
+
+                Theater theater = db.Theaters.Find(theaterId);
+                Movie movie = db.Movies.Find(movieId);
+
+                showTime.Movie = movie;
+                showTime.Theater = theater;
+                showTime.Time = timeShowTime;
+
+                db.ShowTimes.Add(showTime);
+                db.SaveChanges();
+
+                return Json(true);
+            }
+            else
+                return Json(false);
+        }
+
+        [HttpPost]
+        public JsonResult RemoveShowTime(int showTimeId)
+        {
+            ShowTime showTime = db.ShowTimes.Find(showTimeId);
+            db.ShowTimes.Remove(showTime);
+            db.SaveChanges();
+
+            return Json(true);
         }
 
         protected override void Dispose(bool disposing)

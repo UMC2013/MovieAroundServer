@@ -22,6 +22,69 @@ namespace MovieAroundServer.Controllers.API
             return db.Movies;
         }
 
+        public IEnumerable<MovieTheaterViewModel> GetMoviesByLocation(double latitude, double longitude, string genres)
+        {
+            //get theaters
+            var theaters = db.Theaters.Where(t => 
+                (t.Latitude >= latitude - 1 && t.Latitude <= latitude + 1) &&
+                (t.Longitude >= longitude -1 && t.Longitude <= longitude + 1)
+                );
+
+            //haversine
+
+            //get genres
+            List<Genre> selectedGenres = new List<Genre>();
+            var listGenres = genres.Split(new char[] { ',' });
+            foreach (var s in listGenres)
+            {
+                Genre genre = new Genre();
+                int genreId = 0;
+                if (Int32.TryParse(s, out genreId))
+                    genre = db.Genres.Find(genreId);
+                else
+                    genre = db.Genres.FirstOrDefault(g => g.Name == s);
+
+                if (genre != null)
+                    selectedGenres.Add(genre);
+            }
+
+            //match
+            List<MovieTheaterViewModel> movies = new List<MovieTheaterViewModel>();
+            foreach (var theater in theaters)
+            {
+                foreach (var s in theater.ShowTimes)
+                {
+                    if (s.Movie.Genres.Count(g => selectedGenres.Count(gg => gg.GenreId == g.GenreId) > 0) > 0)
+                    {
+                        MovieTheaterViewModel movie = new MovieTheaterViewModel();
+
+                        TheaterViewModel theaterModel = new TheaterViewModel();
+                        theaterModel.TheaterId = theater.TheaterId;
+                        theaterModel.Name = theater.Name;
+
+                        if (movies.Count(m => m.MovieId == s.Movie.MovieId) == 0)
+                        {
+                            movie.MovieId = s.Movie.MovieId;
+                            movie.MovieTitle = s.Movie.Title;
+                            movie.MovieGenre = s.Movie.Genres.First().Name;
+                            movie.Theaters = new List<TheaterViewModel>();
+                            movie.Theaters.Add(theaterModel);
+                            movies.Add(movie);
+                        }
+                        else
+                        {
+                            movie = movies.FirstOrDefault(m => m.MovieId == s.Movie.MovieId);
+                            movie.Theaters.Add(theaterModel);
+                        }
+                        
+                    }
+                }
+            }
+
+            return movies.AsEnumerable();
+            
+        }
+
         // GET api/Movies/5
         [ResponseType(typeof(Movie))]
         public IHttpActionResult GetMovie(int id)

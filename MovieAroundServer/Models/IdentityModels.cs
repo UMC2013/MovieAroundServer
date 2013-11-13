@@ -19,6 +19,7 @@ namespace MovieAroundServer.Models
         public DbSet<Genre> Genres { get; set; }
         public DbSet<Movie> Movies { get; set; }
         public DbSet<Theater> Theaters { get; set; }
+        public DbSet<ShowTime> ShowTimes { get; set; }
     }
 
     public partial class Genre
@@ -38,7 +39,7 @@ namespace MovieAroundServer.Models
         public string Title { get; set; }
         public string Synopsis { get; set; }
         public virtual ICollection<Genre> Genres { get; set; }
-        public virtual ICollection<Theater> Theaters { get; set; }
+        public virtual ICollection<ShowTime> ShowTimes { get; set; }
     }
 
     public partial class Theater
@@ -48,6 +49,14 @@ namespace MovieAroundServer.Models
         public double Latitude { get; set; }
         public double Longitude { get; set; }
         public string Address { get; set; }
-        public virtual ICollection<Movie> Movies { get; set; }
+        public virtual ICollection<ShowTime> ShowTimes { get; set; }
+    }
+
+    public partial class ShowTime
+    {
+        public int ShowTimeId { get; set; }
+        public virtual Movie Movie { get; set; }
+        public virtual Theater Theater { get; set; }
+        public System.TimeSpan Time { get; set; }
     }
 }
