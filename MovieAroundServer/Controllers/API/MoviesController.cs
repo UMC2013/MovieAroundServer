@@ -24,6 +24,8 @@ namespace MovieAroundServer.Controllers.API
 
         public IEnumerable<MovieTheaterViewModel> GetMoviesByLocation(double latitude, double longitude, string genres)
         {
+            //todo: receber tolerancia como parametro, mas default 1
+
             //get theaters
             var theaters = db.Theaters.Where(t => 
                 (t.Latitude >= latitude - 1 && t.Latitude <= latitude + 1) &&

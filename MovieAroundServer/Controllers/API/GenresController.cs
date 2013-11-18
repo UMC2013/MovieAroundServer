@@ -17,9 +17,10 @@ namespace MovieAroundServer.Controllers.API
         private ApplicationDbContext db = new ApplicationDbContext();
 
         // GET api/Genres
-        public IQueryable<Genre> GetGenres()
+        public IEnumerable<GenreViewModel> GetGenres()
         {
-            return db.Genres;
+            var genres = db.Genres.Select(g => new GenreViewModel { GenreId = g.GenreId, Name = g.Name });
+            return genres.AsEnumerable();
         }
 
         // GET api/Genres/5

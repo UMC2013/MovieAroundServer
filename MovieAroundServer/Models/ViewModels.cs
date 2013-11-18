@@ -26,4 +26,10 @@ namespace MovieAroundServer.Models
         public int TheaterId { get; set; }
         public string Name { get; set; }
     }
+
+    public class GenreViewModel
+    {
+        public int GenreId { get; set; }
+        public string Name { get; set; }
+    }
 }
